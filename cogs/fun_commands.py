@@ -1,6 +1,5 @@
 import random
 
-import discord
 from discord.ext import commands
 
 
@@ -40,6 +39,21 @@ class FunCommands(commands.Cog):
                      "You may rely on it.", ]
 
         await ctx.send(f'{random.choice(responses)}')
+
+    @commands.command()
+    async def roll(self, ctx):
+        user_roll_to_message = ctx.message.content[6::]
+
+        numbers = user_roll_to_message.split('d')
+
+        sec_number_plus = numbers[1].split('+')
+
+        if '+' in user_roll_to_message:
+            res = random.randint(int(numbers[0]), int(sec_number_plus[0])) + int(sec_number_plus[1])
+            await ctx.send(f'{res}')
+        else:
+            res = random.randint(int(numbers[0]), int(sec_number_plus[0]))
+            await ctx.send(f'{res}')
 
 
 def setup(client):
