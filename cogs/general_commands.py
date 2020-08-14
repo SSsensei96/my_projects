@@ -9,8 +9,7 @@ from discord_natalie import client
 from secret import weather_token
 
 
-
-async def get_weather_json():
+async def get_weather_json(city):
     async with aiohttp.ClientSession(
             json_serialize=ujson.dumps) as session:
         url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={weather_token}'
@@ -46,10 +45,11 @@ class GeneralCommands(commands.Cog):
 
     @commands.command()
     async def weather(self, ctx):
-        data = await get_weather_json()
-        city = await ctx.lower().split()[1]
-        embed = discord.Embed(title=data[0], color=0xd81313)
-        embed.set_author(name=city)
+        city = ctx.message.content.lower().split()[1]
+        data = await get_weather_json(city)
+
+        embed = discord.Embed(title=data[0].capitalize(), color=0xd81313)
+        embed.set_author(name=city.capitalize())
         embed.add_field(name='Current temperature', value=str(data[1]) + '°C', inline=True)
         embed.add_field(name="Feels like", value=str(data[2]) + '°C', inline=True)
         embed.add_field(name='Humidity', value=str(data[6]) + '°%', inline=True)
@@ -59,6 +59,7 @@ class GeneralCommands(commands.Cog):
         embed.set_footer(text="OpenWeather")
 
         await ctx.send(embed=embed)
+        return city
 
 
 def setup(client):
