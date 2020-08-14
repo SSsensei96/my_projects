@@ -5,7 +5,7 @@ import ujson
 
 import aiohttp
 
-from discord_natalie import client
+from currency_convert import CurrencyConvertor
 from secret import weather_token
 
 
@@ -60,6 +60,21 @@ class GeneralCommands(commands.Cog):
 
         await ctx.send(embed=embed)
         return city
+
+    @commands.command()
+    async def convert(self, ctx):
+        url = str.__add__('http://data.fixer.io/api/latest?access_key=', "d387292f1ba52feb8e1055840e9aea59")
+        c = CurrencyConvertor(url)
+        message_to_split = ctx.message.content[8::]
+        spit_message = message_to_split.split()
+        from_country = spit_message[0]
+        to_country = spit_message[1]
+        initial_amount = int(spit_message[2])
+        res = c.convert(from_country, to_country, initial_amount)
+        result_message = f"{initial_amount} {from_country} = {res} {to_country}"
+        await ctx.send(result_message)
+
+
 
 
 def setup(client):
