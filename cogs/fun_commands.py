@@ -42,18 +42,31 @@ class FunCommands(commands.Cog):
 
     @commands.command()
     async def roll(self, ctx):
-        user_roll_to_message = ctx.message.content[6::]
+        try:
+            user_roll_to_message = ctx.message.content[6::]
 
-        numbers = user_roll_to_message.split('d')
+            numbers = user_roll_to_message.split('d')
 
-        sec_number_plus = numbers[1].split('+')
+            sec_number_plus = numbers[1].split('+')
 
-        if '+' in user_roll_to_message:
-            res = random.randint(int(numbers[0]), int(sec_number_plus[0])) + int(sec_number_plus[1])
+            if '+' in user_roll_to_message:
+                res = random.randint(int(numbers[0]), int(sec_number_plus[0])) + int(sec_number_plus[1])
+                await ctx.send(f'{res}')
+            else:
+                res = random.randint(int(numbers[0]), int(sec_number_plus[0]))
+                await ctx.send(f'{res}')
+        except:
+            await ctx.send('None')
+
+    @commands.command()
+    async def choose(self, ctx):
+        try:
+            user_message_to_choose = ctx.message.content[7::]
+            words = user_message_to_choose.split()
+            res = random.choice(words)
             await ctx.send(f'{res}')
-        else:
-            res = random.randint(int(numbers[0]), int(sec_number_plus[0]))
-            await ctx.send(f'{res}')
+        except:
+            await ctx.send('None')
 
 
 def setup(client):
