@@ -3,6 +3,9 @@ from discord.ext import commands
 import aiohttp
 import ujson
 from secret import weather_token
+from aiogoogletrans import Translator
+from aiogoogletrans.constants import LANGUAGES
+import asyncio
 
 
 async def get_weather_json(city):
@@ -44,7 +47,7 @@ class GeneralCommands(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def weather(self, ctx):
+    async def weather(self, ctx, city):
         try:
             city = ctx.message.content.lower().split()[1]
             data = await get_weather_json(city)
@@ -60,7 +63,6 @@ class GeneralCommands(commands.Cog):
         except:
             await ctx.send('None')
         else:
-
             await ctx.send(embed=embed)
             return city
 
@@ -84,10 +86,23 @@ class GeneralCommands(commands.Cog):
                 initial_amount = amount
                 if from_currency != 'EUR':
                     amount = int(amount) / rates[from_currency]
-
                 amount = round(amount * rates[to_currency], 2)
                 result_message = f"{initial_amount} {from_currency} = {amount} {to_currency}"
                 await ctx.send(result_message)
+        except:
+            await ctx.send('None')
+
+    @commands.command()
+    async def translate(self, ctx):
+        try:
+            translator = Translator()
+            dest_lang = ctx.message.content.split()[1]
+            if dest_lang in LANGUAGES.keys():
+                result = await translator.translate(ctx.message.content[14::], dest=dest_lang)
+            else:
+                result = await translator.translate(ctx.message.content[10::], dest='ru')
+
+            await ctx.send(result.text)
         except:
             await ctx.send('None')
 
