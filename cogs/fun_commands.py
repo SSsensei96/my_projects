@@ -1,6 +1,8 @@
 import random
 
 from discord.ext import commands
+from pornhub_api import PornhubApi
+import asyncio
 
 
 class FunCommands(commands.Cog):
@@ -41,7 +43,7 @@ class FunCommands(commands.Cog):
         await ctx.send(f'{random.choice(responses)}')
 
     @commands.command()
-    async def roll(self, ctx):
+    async def roll(self, ctx, _1d20):
         try:
             user_roll_to_message = ctx.message.content[6::]
 
@@ -59,7 +61,7 @@ class FunCommands(commands.Cog):
             await ctx.send('None')
 
     @commands.command()
-    async def choose(self, ctx):
+    async def choose(self, ctx, words):
         try:
             user_message_to_choose = ctx.message.content[7::]
             words = user_message_to_choose.split()
@@ -67,6 +69,36 @@ class FunCommands(commands.Cog):
             await ctx.send(f'{res}')
         except:
             await ctx.send('None')
+
+    @commands.command(pass_context=True)
+    async def choke(self, ctx, member):
+        random_num = random.randint(1, 20)
+        user_name = ctx.message.content[6::]
+        if random_num >= 17:
+            await ctx.send(f"{ctx.message.author} chokes {member}")
+        else:
+            await ctx.send(f"{ctx.message.author} cant choke {member}")
+
+    @commands.command(aliases=['ilyas'])
+    async def Ilyas(self, ctx):
+        responses = ["Affable", "Agreeable",
+                     "Amiable",
+                     "Charming",
+                     "Polite",
+                     "Likeable",
+                     "Gregarious", "Considerate",
+                     "Sympathetic", "Understanding",
+                     "Diplomatic ", "Impartial ",
+                     "Sincere ", "Straight-forward",
+                     "Generous ", "Helpful ", "Giving ",
+                      "Observant ",
+                     "Quick-witted", "Patient ",
+                     "Dynamic ", "Self-disciplined",
+                     "Resourceful ", "Proactive ",
+                     "Diligent ",
+                     "Versatile ", "Intuitive ", "Adaptable ", "Dependable ",
+                     "Reliable "]
+        await ctx.send(f'{random.choice(responses)}')
 
 
 def setup(client):
