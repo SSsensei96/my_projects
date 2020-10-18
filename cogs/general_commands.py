@@ -6,6 +6,7 @@ from secret import weather_token
 from aiogoogletrans import Translator
 from aiogoogletrans.constants import LANGUAGES
 import asyncio
+import math
 
 
 async def get_weather_json(city):
@@ -74,6 +75,8 @@ class GeneralCommands(commands.Cog):
             from_currency = spit_message[0]
             to_currency = spit_message[1]
             initial_amount = int(spit_message[2])
+            if initial_amount == '':
+                initial_amount = 0
             async with aiohttp.ClientSession(
                     json_serialize=ujson.dumps) as session:
                 url = str("http://data.fixer.io/api/latest?access_key=d387292f1ba52feb8e1055840e9aea59")
@@ -105,6 +108,24 @@ class GeneralCommands(commands.Cog):
             await ctx.send(result.text)
         except:
             await ctx.send('None')
+
+    @commands.command(aliases=['phacid'])
+    async def pHacid(self, ctx):
+        try:
+            conc = float(ctx.message.content[7::])
+            ph = round(math.log10(conc) * -1, 4)
+            await ctx.send(f"log10 числа {conc} равен: {ph}")
+        except:
+            await ctx.send("None")
+
+    @commands.command(aliases=['phbase'])
+    async def pHbase(self, ctx):
+        try:
+            conc = float(ctx.message.content[7::])
+            ph = round(float(14 - (math.log10(conc) * -1)), 4)
+            await ctx.send(f"log10 числа {conc} равен: {ph}")
+        except:
+            await ctx.send("None")
 
 
 def setup(client):
